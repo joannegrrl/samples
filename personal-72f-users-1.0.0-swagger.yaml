@@ -1,0 +1,101 @@
+openapi: 3.0.0
+servers:
+  - description: SwaggerHub API Auto Mocking
+    url: 'https://localhost/users/1.0.0'
+info:
+  description: This is a simple API for managing users
+  version: 1.0.0
+  title: Simple User API
+  contact:
+    email: you@your-company.com
+    name: Joanne Cavan
+    url: ''
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+  termsOfService: ''
+tags:
+  - name: admins
+    description: Secured Admin-only calls
+  - name: developers
+    description: Operations available to regular developers
+paths:
+  /users:
+    get:
+      tags:
+        - developers
+      summary: searches users
+      operationId: searchUsers
+      description: |
+        By passing in the appropriate options, you can search for
+        users in the system
+      parameters:
+        - in: query
+          name: searchString
+          description: 'optional search criteria that will search name, first name, and last name'
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: pageSize
+          description: how many users to return in a single query
+          schema:
+            type: integer
+            format: int32
+            minimum: 5
+            maximum: 50
+            default: 10
+        - in: query
+          name: page
+          description: what page of results
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            default: 1
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '400':
+          description: bad input parameter
+components:
+  schemas:
+    User:
+      title: User
+      type: object
+      description: Basic user definition
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique user ID
+        name:
+          type: string
+          description: Unique username
+        email:
+          type: string
+          description: Email address
+        firstName:
+          type: string
+          description: First name
+        lastName:
+          type: string
+          description: Last name
+        preferredName:
+          type: string
+          description: Preferred name
+          nullable: true
+        pronouns:
+          type: string
+          description: Pronouns (if they wish to share)
+          nullable: true
+        lastLogin:
+          type: string
+          format: date-time
+          description: Date and time the user last logged in
